@@ -61,6 +61,8 @@
         .container {
             max-width: 1000px;
             width: 100%;
+            position: relative;
+            padding-top: 60px; /* Push content below the divider game */
         }
 
         /* Hero Section */
@@ -411,6 +413,102 @@
             opacity: 0.7;
         }
 
+        /* Enhanced divider with game area */
+        section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: linear-gradient(90deg, transparent, rgba(0, 217, 255, 0.1), transparent);
+            border-top: 1px solid var(--accent-dim);
+            border-bottom: 1px solid var(--accent-dim);
+            z-index: 1;
+        }
+
+        /* Hide divider on first section */
+        section:first-child::before {
+            display: none;
+        }
+
+        .divider-game {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            right: 0;
+            height: 60px;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .invader {
+            position: absolute;
+            color: #00d9ff;
+            font-family: monospace;
+            font-size: 6px;
+            opacity: 0.35;
+            white-space: pre;
+            line-height: 1;
+        }
+
+        .spaceship {
+            position: absolute;
+            bottom: 5px;
+            color: #00d9ff;
+            font-family: monospace;
+            font-size: 5px;
+            opacity: 0.35;
+            white-space: pre;
+            line-height: 1;
+        }
+
+        .bullet {
+            position: absolute;
+            width: 2px;
+            height: 6px;
+            background-color: #00d9ff;
+            opacity: 0.5;
+            box-shadow: 0 0 2px #00d9ff;
+        }
+
+        .explosion {
+            position: absolute;
+            font-size: 10px;
+            opacity: 1;
+            z-index: 10;
+            color: #00d9ff;
+            text-shadow: 0 0 5px #00d9ff;
+            pointer-events: none;
+            animation: explosionFlash 0.4s ease-out forwards;
+        }
+
+        @keyframes explosionFlash {
+            0% {
+                opacity: 1;
+                transform: scale(0.5);
+                filter: brightness(2);
+            }
+            50% {
+                opacity: 0.8;
+                transform: scale(1.5);
+                filter: brightness(3);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.5);
+                filter: brightness(1);
+            }
+        }
+
+        /* Hide on mobile */
+        @media (max-width: 768px) {
+            .divider-game {
+                display: none;
+            }
+        }
+
         @keyframes bounce {
             0%, 100% { transform: translateX(-50%) translateY(0); }
             50% { transform: translateX(-50%) translateY(-10px); }
@@ -479,6 +577,7 @@
 
         <!-- About Section -->
         <section class="about">
+            <div class="divider-game" data-section="1"></div>
             <div class="container">
                 <div class="section-number">01 — Journey</div>
                 <h2 class="section-title">From Agency Innovation to AI-First Products</h2>
@@ -493,6 +592,7 @@
 
         <!-- Current Focus Section -->
         <section class="focus">
+            <div class="divider-game" data-section="2"></div>
             <div class="container">
                 <div class="section-label">Current Focus</div>
                 <div class="focus-grid">
@@ -518,6 +618,7 @@
 
         <!-- Experience Section -->
         <section class="experience">
+            <div class="divider-game" data-section="3"></div>
             <div class="container">
                 <div class="section-label">Experience</div>
                 <div class="timeline">
@@ -534,12 +635,12 @@
                     </div>
                     <div class="timeline-item">
                         <div class="period">Sep 2017 - Dec 2022</div>
-                        <h3>Sr Director - R&D, Professional Services & Strategic Accounts</h3>
+                        <h3>Sr Director - Product R&D</h3>
                         <div class="company">BrightEdge Technologies · New York, NY</div>
                         <ul>
                             <li>Led GTM for SEO automation product "AutoPilot" growing 5x in active installs and MRR over 6 months</li>
                             <li>Scaled reporting automation (Kubernetes/PostgreSQL/Hadoop/FastAPI) for enterprise customers</li>
-                            <li>Deployed Python/Vue/TypeScript SaaS tool generating 7k+ analyses for 150+ active users</li>
+                            <li>Built Python/Vue/TypeScript app to support sales pipeline development, serving 7k+ analyses for 150+ internal users</li>
                         </ul>
                     </div>
                     <div class="timeline-item">
@@ -559,6 +660,7 @@
 
         <!-- Brands Section -->
         <section class="brands">
+            <div class="divider-game" data-section="4"></div>
             <div class="container">
                 <div class="section-label">Brands Served</div>
                 <div class="brands-list">
@@ -583,6 +685,7 @@
 
         <!-- Skills Section -->
         <section class="skills">
+            <div class="divider-game" data-section="5"></div>
             <div class="container">
                 <div class="section-label">Technical Expertise</div>
                 <div class="skills-grid">
@@ -631,5 +734,174 @@
             </div>
         </section>
     </div>
+<script>
+    // Initialize game for each divider
+    const dividers = document.querySelectorAll('.divider-game');
+    
+    dividers.forEach((divider, dividerIndex) => {
+        const invaders = [];
+        const bullets = [];
+        
+        // Invader types
+        const invaderTypes = [
+            ' ▄▄█▄▄ \n███████\n▐▀█▄█▀▌\n ▐   ▌ ',
+            ' ▄███▄ \n▐▀█ █▀▌\n ▀███▀ \n▐ ▀ ▀ ▌',
+            '  ███  \n▐█▀▄▀█▌\n ▐███▌ \n▀     ▀'
+        ];
+        
+        // Create spaceship for this divider
+        const spaceship = document.createElement('div');
+        spaceship.className = 'spaceship';
+        spaceship.innerHTML = '   ▲\n  ███\n █████\n███████';
+        divider.appendChild(spaceship);
+        
+        // More realistic movement with random direction changes
+        let spaceshipX = 50 + (dividerIndex * 30);
+        let spaceshipVelocity = 0;
+        let spaceshipDirection = Math.random() < 0.5 ? 1 : -1;
+        const acceleration = 0.08;
+        const maxSpeed = 1.5;
+        const friction = 0.98;
+        
+        function moveSpaceship() {
+            // Randomly change direction (2% chance per frame)
+            if (Math.random() < 0.02) {
+                spaceshipDirection *= -1;
+            }
+            
+            // Apply acceleration in current direction
+            spaceshipVelocity += acceleration * spaceshipDirection;
+            
+            // Apply friction
+            spaceshipVelocity *= friction;
+            
+            // Clamp to max speed
+            if (Math.abs(spaceshipVelocity) > maxSpeed) {
+                spaceshipVelocity = maxSpeed * Math.sign(spaceshipVelocity);
+            }
+            
+            // Update position
+            spaceshipX += spaceshipVelocity;
+            
+            // Bounce at boundaries with direction change
+            const playWidth = divider.offsetWidth;
+            if (spaceshipX >= playWidth - 30) {
+                spaceshipX = playWidth - 30;
+                spaceshipDirection = -1;
+                spaceshipVelocity *= -0.7;
+            }
+            if (spaceshipX <= 10) {
+                spaceshipX = 10;
+                spaceshipDirection = 1;
+                spaceshipVelocity *= -0.7;
+            }
+            
+            spaceship.style.left = spaceshipX + 'px';
+        }
+        
+        setInterval(moveSpaceship, 20);
+        
+        // Create invaders within constrained area
+        function createInvader() {
+            const inv = document.createElement('div');
+            inv.className = 'invader';
+            const invType = Math.floor(Math.random() * 3);
+            inv.innerHTML = invaderTypes[invType];
+            inv.style.left = Math.random() * (divider.offsetWidth - 40) + 'px';
+            inv.style.top = '-20px';
+            divider.appendChild(inv);
+            invaders.push(inv);
+            
+            // Animate invader downward
+            let invY = -20;
+            const invSpeed = 0.15 + Math.random() * 0.1;
+            
+            const moveInvader = setInterval(() => {
+                invY += invSpeed;
+                inv.style.top = invY + 'px';
+                
+                if (invY > 60) {
+                    clearInterval(moveInvader);
+                    inv.remove();
+                    const idx = invaders.indexOf(inv);
+                    if (idx > -1) invaders.splice(idx, 1);
+                }
+            }, 16);
+        }
+        
+        // Create invaders periodically
+        setInterval(createInvader, 2000 + (dividerIndex * 500));
+        
+        // Fire bullets
+        function fireBullet() {
+            const bullet = document.createElement('div');
+            bullet.className = 'bullet';
+            bullet.style.left = spaceshipX + 20 + 'px';
+            bullet.style.bottom = '10px';
+            divider.appendChild(bullet);
+            bullets.push(bullet);
+            
+            // Animate bullet upward
+            let bulletY = 50;
+            const bulletSpeed = 2;
+            
+            const moveBullet = setInterval(() => {
+                bulletY -= bulletSpeed;
+                bullet.style.bottom = (60 - bulletY) + 'px';
+                
+                if (bulletY < -10) {
+                    clearInterval(moveBullet);
+                    bullet.remove();
+                    const idx = bullets.indexOf(bullet);
+                    if (idx > -1) bullets.splice(idx, 1);
+                }
+            }, 16);
+        }
+        
+        setInterval(fireBullet, 400);
+        
+        // Collision detection
+        function checkCollisions() {
+            bullets.forEach(bullet => {
+                const bulletRect = bullet.getBoundingClientRect();
+                
+                invaders.forEach(invader => {
+                    if (invader.dataset.destroyed === 'true') return;
+                    
+                    const invRect = invader.getBoundingClientRect();
+                    
+                    if (bulletRect.left < invRect.right &&
+                        bulletRect.right > invRect.left &&
+                        bulletRect.top < invRect.bottom &&
+                        bulletRect.bottom > invRect.top) {
+                        
+                        invader.dataset.destroyed = 'true';
+                        
+                        // Create explosion
+                        const explosion = document.createElement('div');
+                        explosion.className = 'explosion';
+                        explosion.textContent = '✦';
+                        explosion.style.left = (invRect.left - divider.getBoundingClientRect().left) + 'px';
+                        explosion.style.top = (invRect.top - divider.getBoundingClientRect().top) + 'px';
+                        divider.appendChild(explosion);
+                        
+                        invader.remove();
+                        bullet.remove();
+                        
+                        setTimeout(() => explosion.remove(), 400);
+                        
+                        const invIdx = invaders.indexOf(invader);
+                        if (invIdx > -1) invaders.splice(invIdx, 1);
+                        
+                        const bulletIdx = bullets.indexOf(bullet);
+                        if (bulletIdx > -1) bullets.splice(bulletIdx, 1);
+                    }
+                });
+            });
+        }
+        
+        setInterval(checkCollisions, 30);
+    });
+</script>
 </body>
 </html>
