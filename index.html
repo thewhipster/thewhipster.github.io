@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adam Whippy - VP Product Strategy</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #141414;
+            --text-primary: #e4e4e4;
+            --text-secondary: #a0a0a0;
+            --accent: #00d9ff;
+            --accent-dim: #007a8f;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        .scroll-container {
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            height: 100vh;
+        }
+
+        section {
+            min-height: 100vh;
+            scroll-snap-align: start;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-dim), transparent);
+            opacity: 0.3;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(165deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 217, 255, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-text {
+            max-width: 700px;
+        }
+
+        .hero-image {
+            position: relative;
+        }
+
+        .headshot {
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--accent);
+            box-shadow: 0 0 40px rgba(0, 217, 255, 0.3);
+            filter: grayscale(30%) contrast(1.1);
+        }
+
+        .hero .subtitle {
+            font-size: 0.95rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .hero h1 {
+            font-size: clamp(3.5rem, 10vw, 5.5rem);
+            font-weight: 200;
+            letter-spacing: -0.03em;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .hero .intro {
+            font-size: clamp(1.3rem, 2.5vw, 1.6rem);
+            color: var(--text-secondary);
+            max-width: 700px;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .hero .location {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            letter-spacing: 0.05em;
+        }
+
+        /* About Section */
+        .about {
+            background: var(--bg-secondary);
+        }
+
+        .section-number {
+            font-size: 0.85rem;
+            color: var(--accent);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 300;
+            margin-top: 0.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .narrative {
+            font-size: 1.15rem;
+            line-height: 1.9;
+            color: var(--text-secondary);
+        }
+
+        .narrative p {
+            margin-bottom: 1.5rem;
+        }
+
+        .narrative strong {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .highlight-stat {
+            display: inline-block;
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        /* Current Focus Section */
+        .focus {
+            background: var(--bg-primary);
+        }
+
+        .section-label {
+            font-size: 0.875rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 2rem;
+            font-weight: 500;
+        }
+
+        .focus-grid {
+            display: grid;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .focus-item {
+            border-left: 2px solid var(--accent-dim);
+            padding-left: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .focus-item:hover {
+            border-left-color: var(--accent);
+        }
+
+        .focus-item h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            font-weight: 400;
+        }
+
+        .focus-item p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* Experience Section */
+        .experience {
+            background: var(--bg-secondary);
+        }
+
+        .timeline {
+            margin-top: 3rem;
+        }
+
+        .timeline-item {
+            margin-bottom: 4rem;
+            position: relative;
+            padding-left: 2rem;
+            border-left: 1px solid var(--accent-dim);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -5px;
+            top: 0;
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 20px var(--accent);
+        }
+
+        .timeline-item .period {
+            font-size: 0.875rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-item h3 {
+            font-size: 1.8rem;
+            margin-bottom: 0.3rem;
+            font-weight: 400;
+        }
+
+        .timeline-item .company {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .timeline-item ul {
+            list-style: none;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .timeline-item ul li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .timeline-item ul li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+        }
+
+        /* Brands Section */
+        .brands {
+            background: var(--bg-primary);
+        }
+
+        .brands-list {
+            margin-top: 3rem;
+            columns: 4;
+            column-gap: 3rem;
+        }
+
+        .brand-item {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 0.7rem;
+            padding-left: 1.5rem;
+            position: relative;
+            break-inside: avoid;
+        }
+
+        .brand-item::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--accent-dim);
+        }
+
+        /* Skills Section */
+        .skills {
+            background: var(--bg-secondary);
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .skills-category {
+            position: relative;
+        }
+
+        .skills-category h3 {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-bottom: 1px solid var(--accent-dim);
+            padding-bottom: 0.5rem;
+        }
+
+        .skills-list {
+            list-style: none;
+        }
+
+        .skills-list li {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            padding-left: 1.2rem;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        .skills-list li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-size: 0.8rem;
+        }
+
+        /* Contact Section */
+        .contact {
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #000000 100%);
+        }
+
+        .contact-info {
+            margin-top: 3rem;
+        }
+
+        .contact-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-item .label {
+            font-size: 0.875rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-item a {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .contact-item a:hover {
+            color: var(--accent);
+        }
+
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--accent);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            animation: bounce 2s infinite;
+            z-index: 10;
+            opacity: 0.7;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .hero-image {
+                order: -1;
+                margin: 0 auto;
+            }
+
+            .headshot {
+                width: 200px;
+                height: 200px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            section {
+                padding: 1.5rem;
+            }
+
+            .brands-list {
+                columns: 2;
+                column-gap: 2rem;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .focus-item {
+                padding-left: 1rem;
+            }
+
+            .timeline-item {
+                padding-left: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="scroll-container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container hero-content">
+                <div class="hero-text">
+                    <div class="subtitle">VP, Product Strategy</div>
+                    <h1>Adam<br>Whippy</h1>
+                    <p class="intro">Creative technologist and AI product leader who transforms cutting-edge technology into business value. Twenty years building teams, products, and strategies at the intersection of innovation and execution.</p>
+                    <div class="location">Brooklyn, New York</div>
+                </div>
+                <div class="hero-image">
+                    <img src="adam-whippy-seo-profile.jpg" alt="Adam Whippy" class="headshot">
+                </div>
+            </div>
+            <div class="scroll-indicator">Scroll ↓</div>
+        </section>
+
+        <!-- About Section -->
+        <section class="about">
+            <div class="container">
+                <div class="section-number">01 — Journey</div>
+                <h2 class="section-title">From Agency Innovation to AI-First Products</h2>
+                <div class="narrative">
+                    <p>My career has been a progression from <strong>understanding search algorithms</strong> to <strong>building the algorithms themselves</strong>—and crafting the experiences that make them useful. I started in the agency world, leading the SEO practice at <strong>360i—the #1 search marketing agency</strong> recognized by Forrester—where I served Fortune 100 brands reaching over <span class="highlight-stat">430 million searchers annually</span>.</p>
+                    <p>That foundation in understanding how technology serves customer needs led me to <strong>BrightEdge</strong>, where I shifted from consultant to builder. I developed scalable automation products, built internal tools with modern stacks, and learned to ship software that customers actually used—growing one product <span class="highlight-stat">5x in installs and MRR over 6 months</span>.</p>
+                    <p>Today at <strong>Profitero+</strong>, I'm doing what I love most: <strong>leading cross-functional teams to build AI-first products from zero to one</strong>. Over three years, I've worked daily with frontend developers and product designers to stand up a cohesive B2B application supporting complex workflows with intuitive UX. I took our Content Optimizer from concept to <span class="highlight-stat">100+ enterprise customers</span>, scaled a team of 24 engineers and 7 product professionals, and pioneered the integration of LLMs into our product architecture since GPT-3.</p>
+                    <p>The thread throughout? <strong>Equal parts technical depth and design thinking</strong>—the ability to translate complex technical capabilities into products that feel effortless to use. Whether prototyping in Figma, collaborating in code reviews, or finding creative solutions to technical constraints, I bridge the gap between what's possible and what's delightful.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Current Focus Section -->
+        <section class="focus">
+            <div class="container">
+                <div class="section-label">Current Focus</div>
+                <div class="focus-grid">
+                    <div class="focus-item">
+                        <h3>Product Leadership</h3>
+                        <p>Leading cross-functional teams of 24+ engineers, product owners, designers and analysts. Driving strategy, roadmap, and execution from concept to scale across 100+ enterprise customers. Responsible for Profitero's overall UX development and product vision.</p>
+                    </div>
+                    <div class="focus-item">
+                        <h3>UX & Product Design</h3>
+                        <p>Three years collaborating daily with frontend developers and designers to build cohesive B2B applications supporting complex workflows. Working in Figma to provide vision and tactical direction. Prototyping interactions and finding creative solutions to technical constraints that enable meaningful UX enhancements.</p>
+                    </div>
+                    <div class="focus-item">
+                        <h3>AI & Machine Learning</h3>
+                        <p>Early mover integrating LLMs into product since GPT-3. Building RAG-based systems, fine-tuning models, and developing agentic workflows. Collaborating daily with data scientists on GNN-based ranking and applied AI capabilities.</p>
+                    </div>
+                    <div class="focus-item">
+                        <h3>Full Stack Development</h3>
+                        <p>Shipping production React/Firebase applications. Scaling solutions via API, Kubernetes, Celery, and modern database technologies. Making key technical decisions while maintaining focus on user experience and product quality.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Experience Section -->
+        <section class="experience">
+            <div class="container">
+                <div class="section-label">Experience</div>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="period">Dec 2022 - Present</div>
+                        <h3>VP, Product Strategy</h3>
+                        <div class="company">Profitero+ · New York, NY</div>
+                        <ul>
+                            <li>Launched AI-first SaaS ecommerce product from 0→1, scaling to 100+ customers across 400+ categories</li>
+                            <li>Built RAG-based compliance system increasing precision from ~70% to 85%+ through fine-tuning</li>
+                            <li>Led 24 engineers and 7 product team members; shipped React/Firebase application to production</li>
+                            <li>Reduced deployment time by 50% through data optimization and model improvements</li>
+                        </ul>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="period">Sep 2017 - Dec 2022</div>
+                        <h3>Sr Director - R&D, Professional Services & Strategic Accounts</h3>
+                        <div class="company">BrightEdge Technologies · New York, NY</div>
+                        <ul>
+                            <li>Led GTM for SEO automation product "AutoPilot" growing 5x in active installs and MRR over 6 months</li>
+                            <li>Scaled reporting automation (Kubernetes/PostgreSQL/Hadoop/FastAPI) for enterprise customers</li>
+                            <li>Deployed Python/Vue/TypeScript SaaS tool generating 7k+ analyses for 150+ active users</li>
+                        </ul>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="period">Jan 2010 - Feb 2015</div>
+                        <h3>Group Director, SEO</h3>
+                        <div class="company">360i · New York, NY · #1 Search Marketing Agency</div>
+                        <ul>
+                            <li>Led SEO practice for Fortune 100 brands serving 430MM+ searchers annually</li>
+                            <li>Drove 60% revenue growth YoY by lifting average retainers 34%</li>
+                            <li>Pitched and secured $6MM+ in new business from enterprise clients</li>
+                            <li>Grew department to 20+ team members focused on innovation and excellence</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Brands Section -->
+        <section class="brands">
+            <div class="container">
+                <div class="section-label">Brands Served</div>
+                <div class="brands-list">
+                    <div class="brand-item">Apple</div>
+                    <div class="brand-item">Ralph Lauren</div>
+                    <div class="brand-item">J.Crew</div>
+                    <div class="brand-item">Ford Motor Company</div>
+                    <div class="brand-item">IBM</div>
+                    <div class="brand-item">AT&T</div>
+                    <div class="brand-item">DSW</div>
+                    <div class="brand-item">Barneys</div>
+                    <div class="brand-item">Mattel</div>
+                    <div class="brand-item">Conde Nast</div>
+                    <div class="brand-item">Capital One</div>
+                    <div class="brand-item">Nokia</div>
+                    <div class="brand-item">SAP</div>
+                    <div class="brand-item">Enterprise Holdings</div>
+                    <div class="brand-item">Caesars Entertainment</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section class="skills">
+            <div class="container">
+                <div class="section-label">Technical Expertise</div>
+                <div class="skills-grid">
+                    <div class="skills-category">
+                        <h3>AI & Machine Learning</h3>
+                        <ul class="skills-list">
+                            <li>LLMs, RAG systems & fine-tuning</li>
+                            <li>Natural language processing</li>
+                            <li>Graph neural networks (GNN)</li>
+                            <li>Agentic workflows & orchestration</li>
+                            <li>Model optimization & evaluation</li>
+                        </ul>
+                    </div>
+                    <div class="skills-category">
+                        <h3>Full Stack & Infrastructure</h3>
+                        <ul class="skills-list">
+                            <li>React, Firebase, Vue, TypeScript</li>
+                            <li>Kubernetes, Docker, Celery</li>
+                            <li>PostgreSQL, Hadoop</li>
+                            <li>FastAPI, Python</li>
+                            <li>API design & scaling</li>
+                        </ul>
+                    </div>
+                    <div class="skills-category">
+                        <h3>Data & Analytics</h3>
+                        <ul class="skills-list">
+                            <li>Snowflake, BigQuery</li>
+                            <li>Pandas, Dask, Spacy</li>
+                            <li>Domo, Grafana, Data Studio</li>
+                            <li>BI & data visualization</li>
+                            <li>Experimentation frameworks</li>
+                        </ul>
+                    </div>
+                    <div class="skills-category">
+                        <h3>Product & UX Design</h3>
+                        <ul class="skills-list">
+                            <li>Figma prototyping & design systems</li>
+                            <li>Complex workflow design</li>
+                            <li>B2B application UX</li>
+                            <li>User research & discovery</li>
+                            <li>Interaction design</li>
+                            <li>Creative problem-solving within constraints</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</body>
+</html>
